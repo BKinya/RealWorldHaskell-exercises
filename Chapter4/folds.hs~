@@ -1,0 +1,57 @@
+-- A function that takes a string of decimal digits and then turns them into an Integer
+
+import Data.Char (digitToInt)
+import Prelude
+
+asInt :: String -> Int
+loop :: Int -> String -> Int
+
+asInt xs = loop 0 xs
+
+loop acc [] = acc 
+loop acc (x:xs) = let acc' = acc * 10 + digitToInt x
+  in loop acc' xs
+
+
+-- rewrite asInt function using a fold operation
+
+asInt_fold :: String -> Int
+asInt_fold xs =foldl` charAsInt 0 xs
+  where charAsInt :: Char -> Int -> Int
+        charAsInt x acc =  digitToInt x + acc * 10
+
+{-
+ The Prelude function concat concatenates a list of lists into a single list and has thefollowing type:
+                concat :: [[a]] -> [a]
+
+ Write your own definition of concat using foldr
+-}
+
+myConcat :: [[a]] -> [a]
+myConcat [] = []
+
+myConcat xss = foldr (++) [] xss
+
+
+
+
+--  Write your own definition of the standard takeWhile function, first using explicitrecursion, and then foldr.
+--  Using recursion
+
+myTakeWhile :: (a->Bool) -> [a] -> [a]
+myTakeWhile f (x:xs)
+  | f x       = x: myTakeWhile f xs
+  | otherwise = myTakeWhile f xs
+
+
+myTakeWhile _ _ = []
+
+
+-- Using foldr
+
+niceTakeWhile :: (a->Bool) -> [a] -> [a]
+niceTakeWhile f xs = foldr step [] xs
+  where step x ys
+          | f x       = x: ys
+          | otherwise = ys
+  
