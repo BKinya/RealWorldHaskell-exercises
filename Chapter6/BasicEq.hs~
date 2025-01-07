@@ -1,0 +1,46 @@
+{-# LANGUAGE FlexibleInstances #-}
+
+import SimpleJson
+
+class BasicEq a where
+  isEqual ::  a -> a -> Bool
+
+-- Defining isEqual for a particular type
+-- Bool
+instance BasicEq Bool where
+  isEqual True  True  = True
+  isEqual False False = True
+  isEqual _     _     = False
+
+
+class BasicEq2 a where
+  isEqual2 :: a -> a -> Bool
+  isNotEqual2 :: a -> a -> Bool
+
+
+
+{-
+Users implementing BasicEq3 must provide an
+implementation of at least one function
+-}
+
+-- Creating new instances of a type class
+type JSONError = String
+
+class JSON a where
+  toJValue :: a -> JValue
+  fromJValue :: JValue -> Either JSONError a
+
+doubleToJValue :: (Double -> a) -> JValue -> Either JSONError a
+doubleToJValue f (JNumber v) = Right (f v)
+doubleToJValue _ _ = Left "Not a JSON number"
+
+
+instance JSON Int where
+  toJValue = JNumber . realToFrac
+  fromJValue = doubleToJValue round
+
+
+instance JSON Double where
+  toValue = JNumber
+  fromJValue = doubleToJValue id
