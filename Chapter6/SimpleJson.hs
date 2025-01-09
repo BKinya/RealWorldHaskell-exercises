@@ -11,13 +11,14 @@ module SimpleJson
   , isNull
   ) where -- keyword where indicates that the bod o the module follows
 
+
 -- Use an Agebraic Data Type to represent the range of possible JSON types
 data JValue = JString String
   | JNumber Double
   | JBool Bool
   | JNull
-  | JObject [(String, JValue)]
-  | JArray [JValue]
+  | JObject (JObj JValue) -- was [(String, JValue)]
+  | JArray (JAry JValue) -- was [JValue]
     deriving (Eq, Ord,Show)
 
 {- Take a JValue and reverse it to a Normal Haskell value
