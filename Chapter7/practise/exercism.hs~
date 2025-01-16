@@ -1,0 +1,68 @@
+import Data.List (sort)
+import Data.Char (toLower)
+import Data.Char (isDigit)
+import Data.List (reverse)
+
+anagramsFor :: String -> [String] -> [String]
+anagramsFor target (x:xs)
+  | (map toLower target)        == (map toLower x)        = anagramsFor target xs
+  | (sort (map toLower target)) == (sort (map toLower x)) = x : anagramsFor target xs
+  | otherwise                                             = anagramsFor target xs
+
+
+anagramsFor target _                                      = []
+
+
+---
+
+data Classification = Deficient | Perfect | Abundant deriving (Eq, Show)
+
+classify :: Int -> Maybe Classification
+classify n
+  | n <= 0   = Nothing
+  | mSum == n = Just Perfect
+  | mSum > n  = Just Abundant
+  | mSum < n  = Just Deficient
+  | otherwise =  Nothing
+
+  where mSum = sum (factors n) 
+
+
+factors n = [x | x <- [1..(n-1)], n `mod` x == 0]
+
+
+---
+
+isValid :: String -> Bool
+isValid n
+  | (length (removeWhiteSpaces n)<= 1)     = False
+  | not ( all isDigit (filter (/= ' ') n)) = False
+  | sum `mod` 10 == 0                      = True 
+  | otherwise                              = False
+  
+  where sum = helper n
+
+
+helper :: String -> Int
+helper  = sum . doubleEverySecondNumber . reverse . stringToDigitList . removeWhiteSpaces
+
+
+removeWhiteSpaces :: String -> String
+removeWhiteSpaces = filter (/= ' ')
+
+doubleEverySecondNumber :: [Int] -> [Int]
+doubleEverySecondNumber (x:y:xs) =  x : ( sumDigits(2 * y)) : doubleEverySecondNumber xs
+doubleEverySecondNumber a = a
+
+sumDigits :: Int -> Int
+sumDigits n
+  | n == 0 = 0
+  | n > 0 && n < 10 = n
+  | otherwise = (mod n 10) + sumDigits (div n 10)
+
+stringToDigitList :: String -> [Int]
+stringToDigitList [] = []
+stringToDigitList (x:xs) 
+  | isDigit x = (read [x] :: Int) : stringToDigitList xs
+  | otherwise = stringToDigitList xs
+
