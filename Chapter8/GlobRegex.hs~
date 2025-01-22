@@ -1,0 +1,10 @@
+module GlobRegex
+  (
+    glonToRegex
+  , matchesGlob
+  ) where
+
+import Text.Regex.Posix ((=~))
+
+globToRegex :: String -> String
+globToRegex cs = '^' : globToRegex' cs ++ "$"
